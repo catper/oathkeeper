@@ -125,6 +125,8 @@ func (a *AuthenticatorOAuth2Introspection) tokenToCache(config *AuthenticatorOAu
 }
 
 func (a *AuthenticatorOAuth2Introspection) Authenticate(r *http.Request, session *AuthenticationSession, config json.RawMessage, _ pipeline.Rule) error {
+	//fmt.Printf("oauth2_introspection, start %v \n", time.Now());
+	start := time.Now();
 	cf, err := a.Config(config)
 	if err != nil {
 		return err
@@ -209,7 +211,8 @@ func (a *AuthenticatorOAuth2Introspection) Authenticate(r *http.Request, session
 
 	session.Subject = i.Subject
 	session.Extra = i.Extra
-
+	diff := time.Now().Sub(start)
+	fmt.Printf("oauth2_introspection, took %v \n", diff);
 	return nil
 }
 

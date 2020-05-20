@@ -3,8 +3,10 @@ package authn
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/url"
+	"time"
 
 	"golang.org/x/oauth2"
 
@@ -56,6 +58,7 @@ func (a *AuthenticatorOAuth2ClientCredentials) Config(config json.RawMessage) (*
 }
 
 func (a *AuthenticatorOAuth2ClientCredentials) Authenticate(r *http.Request, session *AuthenticationSession, config json.RawMessage, _ pipeline.Rule) error {
+	start := time.Now()
 	cf, err := a.Config(config)
 	if err != nil {
 		return err
@@ -84,12 +87,16 @@ func (a *AuthenticatorOAuth2ClientCredentials) Authenticate(r *http.Request, ses
 		AuthStyle:    oauth2.AuthStyleInHeader,
 	}
 
+	var rt http.RoundTripper
 	token, err := c.Token(context.WithValue(
 		context.Background(),
 		oauth2.HTTPClient,
-		httpx.NewResilientClientLatencyToleranceMedium(nil),
+		//httpx.NewResilientClientLatencyToleranceMedium(nil),
+		httpx.NewResilientClientLatencyToleranceHigh(rt),
 	))
+
 	if err != nil {
+		fmt.Printf("Got error: %v\n", err.Error())
 		return errors.Wrapf(helper.ErrUnauthorized, err.Error())
 	}
 
@@ -98,5 +105,7 @@ func (a *AuthenticatorOAuth2ClientCredentials) Authenticate(r *http.Request, ses
 	}
 
 	session.Subject = user
+	diff := time.Now().Sub(start)
+	fmt.Printf("oauth2_client_credentials, took %v \n", diff)
 	return nil
 }
