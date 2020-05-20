@@ -48,6 +48,6 @@ docker:
 		packr2 clean
 		#docker build -t oryd/oathkeeper:dev .
 		#docker build -t oryd/oathkeeper:dev-alpine -f Dockerfile-alpine .
-		docker build -t nexus.int.clxnetworks.net:8089/catper/oathkeeper:timeout .
+		docker build -t nexus.int.clxnetworks.net:8089/catper/oathkeeper:timeout_medium .
 		#docker build -t oathkeeper:client_credentials .
 		rm oathkeeper

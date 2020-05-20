@@ -92,7 +92,8 @@ func (a *AuthenticatorOAuth2ClientCredentials) Authenticate(r *http.Request, ses
 		context.Background(),
 		oauth2.HTTPClient,
 		//httpx.NewResilientClientLatencyToleranceMedium(nil),
-		httpx.NewResilientClientLatencyToleranceHigh(rt),
+		//httpx.NewResilientClientLatencyToleranceHigh(rt),
+		httpx.NewResilientClientLatencyToleranceMedium(rt),
 	))
 
 	if err != nil {
