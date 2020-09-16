@@ -225,6 +225,7 @@ func (d *RequestHandler) HandleRequest(r *http.Request, rl *rule.Rule) (session 
 			// return nil
 			case helper.ErrUnauthorized.ErrorField:
 				d.r.Logger().Info(err)
+				return nil, err
 			default:
 				d.r.Logger().WithError(err).
 					WithFields(fields).
